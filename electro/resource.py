@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import request, Response
+from flask.json import dumps
 from flask.views import MethodView
 
 class Resource(MethodView):
@@ -35,5 +36,23 @@ class Resource(MethodView):
 
         return presenter.as_representation(data, code, headers)
 
-    def _parse_response(self, response):
-        return {}, 200, {}
+    def _parse_response(self, value):
+        if not isinstance(value, tuple):
+            code = 200
+            if value == '':
+                code = 204
+            return dumps(value), code, {}
+
+        try:
+            data, code, headers = value
+        except ValueError:
+            pass
+
+        try:
+            data, code = value
+            headers = {}
+        except ValueError:
+            data, code, headers = value, 200, {}
+
+        data = dumps(data)
+        return code, data, headers
