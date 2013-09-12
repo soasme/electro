@@ -34,7 +34,7 @@ class Resource(MethodView):
         if not presenter:
             return response
 
-        return presenter.as_representation(data, code, headers)
+        return presenter.as_representation(method, data, code, headers)
 
     def _parse_response(self, value):
         if not isinstance(value, tuple):
