@@ -27,7 +27,7 @@ class Resource(MethodView):
         if isinstance(response, Response):
             return response
 
-        data, code, headers = self.parse_response(response)
+        data, code, headers = self._parse_response(response)
         presenter = next((v for v in self.vendors
             if v.mediatype==request.access_mediatype), None)
 
