@@ -11,7 +11,7 @@ class API(object):
         self.decorators = decorators or []
         self.catch_all_404s = catch_all_404s
 
-    def add_resource(self, resource, *urls, **kw):
+    def add_resource(self, resource, url, **kw):
         endpoint = kw.pop('endpoint', None) or resource.__name__.lower()
         self.endpoints.add(endpoint)
 
@@ -24,6 +24,4 @@ class API(object):
         resource_func = resource.as_view(endpoint)
         for decorator in self.decorators:
             resource_func = decorator(resource_func)
-
-        for url in urls:
-            self.app.add_url_rule(url, view_func=resource_func, **kw)
+        self.app.add_url_rule(url, view_func=resource_func, **kw)
