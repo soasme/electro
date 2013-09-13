@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from json import dumps
+from flask import make_response
+
 class Presenter(object):
 
     mediatype = None
@@ -33,3 +36,13 @@ class Presenter(object):
     def options(self):
         raise NotImplementedError
 
+class JSONPresenter(Presenter):
+
+    mediatype = 'application/json'
+
+    @classmethod
+    def as_representation(cls, method, data, code, headers):
+        data = dumps(data)
+        response = make_response(data, code)
+        response.headers.extend(headers)
+        return response
