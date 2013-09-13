@@ -11,7 +11,7 @@ from mock import Mock
 
 class TestAPI(TestCase):
 
-    def test_add_resource(self):
+    def test_add_endpoint(self):
         app = Flask(__name__)
         api = API(app)
         api.add_resource(Resource, '/resource')
@@ -34,3 +34,14 @@ class TestAPI(TestCase):
         api.add_resource(Resource, '/resource')
 
         self.assertEqual(Resource, app.view_functions['resource'].__dict__['view_class'])
+
+    def test_add_url_rule(self):
+        app = Mock()
+        app.view_functions = {}
+        api = API(app)
+        resource_func = Mock()
+        Resource.as_view = Mock(return_value=resource_func)
+        api.add_resource(Resource, '/resource')
+
+        app.add_url_rule.assert_called_once_with('/resource',
+                view_func=resource_func)
