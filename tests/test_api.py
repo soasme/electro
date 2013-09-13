@@ -30,10 +30,22 @@ class TestAPI(TestCase):
     def test_add_same_resource(self):
         app = Flask(__name__)
         api = API(app)
-        api.add_resource(Resource, '/resource')
-        api.add_resource(Resource, '/resource')
+        class AddSameResource(Resource):
+            def get(self): return 'pass'
+        api.add_resource(AddSameResource, '/resource', endpoint='resource')
+        api.add_resource(AddSameResource, '/resource/another', endpoint='another_resource')
 
-        self.assertEqual(Resource, app.view_functions['resource'].__dict__['view_class'])
+        self.assertEqual(AddSameResource,
+                app.view_functions['resource'].__dict__['view_class'])
+        self.assertEqual(AddSameResource,
+                app.view_functions['another_resource'].__dict__['view_class'])
+
+        with app.test_client() as client:
+            resource = client.get('/resource')
+            self.assertEqual(resource.data, "pass")
+            resource = client.get('/resource/another')
+            self.assertEqual(resource.data, "pass")
+
 
     def test_add_url_rule(self):
         app = Mock()
