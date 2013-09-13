@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import request, Response
-from flask.json import dumps
+from flask import json
 from flask.views import MethodView
 
 class Resource(MethodView):
@@ -41,7 +41,7 @@ class Resource(MethodView):
             code = 200
             if value == '':
                 code = 204
-            return dumps(value), code, {}
+            return json.dumps(value), code, {}
 
         try:
             data, code, headers = value
