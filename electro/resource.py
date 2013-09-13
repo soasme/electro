@@ -38,21 +38,21 @@ class Resource(MethodView):
 
     def _parse_response(self, value):
         if not isinstance(value, tuple):
-            code = 200
             if value == '':
                 code = 204
-            return json.dumps(value), code, {}
+            else:
+                code = 200
+                value = json.dumps(value)
+            return value, code, {}
 
         try:
             data, code, headers = value
         except ValueError:
-            pass
+            try:
+                data, code = value
+                headers = {}
+            except ValueError:
+                data, code, headers = value, 200, {}
 
-        try:
-            data, code = value
-            headers = {}
-        except ValueError:
-            data, code, headers = value, 200, {}
-
-        data = dumps(data)
-        return code, data, headers
+        data = json.dumps(data)
+        return data, code, headers
