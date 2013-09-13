@@ -18,7 +18,7 @@ class API(object):
         if endpoint in self.app.view_functions:
             previous_view_class = self.app.view_functions[endpoint].__dict__['view_class']
             if previous_view_class != resource:
-                raise ResourceDuplicatedDefinedError, "already set"
+                raise ResourceDuplicatedDefinedError(endpoint)
 
         resource.endpoint = endpoint
         resource_func = resource.as_view(endpoint)
