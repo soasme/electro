@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from flask import request, Response
-from flask import json
 from flask.views import MethodView
+from electro.presenter import JSONPresenter
 
 class Resource(MethodView):
 
     vendors = []
     method_decorators = []
+    default_vendor = JSONPresenter
 
     def dispatch_request(self, *args, **kw):
         method = getattr(self, request.method.lower(), None)
@@ -29,10 +30,7 @@ class Resource(MethodView):
 
         data, code, headers = self._parse_response(response)
         presenter = next((v for v in self.vendors
-            if v.mediatype==request.access_mediatype), None)
-
-        if not presenter:
-            return response
+            if v.mediatype==request.access_mediatype), self.default_vendor)
 
         return presenter.as_representation(method, data, code, headers)
 
@@ -42,7 +40,6 @@ class Resource(MethodView):
                 code = 204
             else:
                 code = 200
-                value = json.dumps(value)
             return value, code, {}
 
         try:
@@ -54,5 +51,4 @@ class Resource(MethodView):
             except ValueError:
                 data, code, headers = value, 200, {}
 
-        data = json.dumps(data)
         return data, code, headers
