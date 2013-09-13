@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from electro.errors import ResourceDuplicatedDefinedError
+
 class API(object):
 
     def __init__(self, app=None, decorators=None,
@@ -16,7 +18,7 @@ class API(object):
         if endpoint in self.app.view_functions:
             previous_view_class = self.app.view_functions[endpoint].__dict__['view_class']
             if previous_view_class != resource:
-                raise Exception, "already set"
+                raise ResourceDuplicatedDefinedError, "already set"
 
         resource.endpoint = endpoint
         resource_func = resource.as_view(endpoint)
