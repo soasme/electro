@@ -3,7 +3,7 @@
 from flask import Flask
 from electro.api import API
 from electro.resource import Resource
-from electro.errors import (
+from electro.exceptions import (
         ResourceDuplicatedDefinedError,
         )
 from unittest import TestCase

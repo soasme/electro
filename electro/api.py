@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from electro.errors import ResourceDuplicatedDefinedError
+from electro.exceptions import ResourceDuplicatedDefinedError
 
 class API(object):
 
