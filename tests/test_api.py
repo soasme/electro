@@ -42,9 +42,9 @@ class TestAPI(TestCase):
 
         with app.test_client() as client:
             resource = client.get('/resource')
-            self.assertEqual(resource.data, "pass")
+            self.assertEqual(resource.data, '"pass"')
             resource = client.get('/resource/another')
-            self.assertEqual(resource.data, "pass")
+            self.assertEqual(resource.data, '"pass"')
 
 
     def test_add_url_rule(self):
@@ -53,7 +53,8 @@ class TestAPI(TestCase):
         api = API(app)
         resource_func = Mock()
         Resource.as_view = Mock(return_value=resource_func)
-        api.add_resource(Resource, '/resource')
+        api.add_resource(Resource, '/resource', endpoint="resource")
 
         app.add_url_rule.assert_called_once_with('/resource',
-                view_func=resource_func)
+                view_func=resource_func,
+                endpoint='resource')
