@@ -7,7 +7,7 @@ from electro.exceptions import (
         ResourceDuplicatedDefinedError,
         )
 from unittest import TestCase
-from mock import Mock
+from mock import Mock, patch
 
 class TestAPI(TestCase):
 
@@ -47,13 +47,14 @@ class TestAPI(TestCase):
             self.assertEqual(resource.data, '"pass"')
 
 
-    def test_add_url_rule(self):
+    @patch('electro.resource.Resource')
+    def test_add_url_rule(self, mock_resource):
         app = Mock()
         app.view_functions = {}
         api = API(app)
         resource_func = Mock()
-        Resource.as_view = Mock(return_value=resource_func)
-        api.add_resource(Resource, '/resource', endpoint="resource")
+        mock_resource.as_view = Mock(return_value=resource_func)
+        api.add_resource(mock_resource, '/resource', endpoint="resource")
 
         app.add_url_rule.assert_called_once_with('/resource',
                 view_func=resource_func,
