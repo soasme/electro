@@ -24,4 +24,4 @@ class API(object):
         resource_func = resource.as_view(endpoint)
         for decorator in self.decorators:
             resource_func = decorator(resource_func)
-        self.app.add_url_rule(url, view_func=resource_func, **kw)
+        self.app.add_url_rule(url, view_func=resource_func, endpoint=endpoint, **kw)
