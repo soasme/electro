@@ -39,4 +39,5 @@ class TestResource(TestCase):
 
         with app.test_client() as client:
             response = client.head('/test')
-            print response
+            self.assertEqual(response.status_code, 204)
+            self.assertEqual(response.data, '')
